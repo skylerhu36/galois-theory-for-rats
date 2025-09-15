@@ -5,6 +5,12 @@
 \usepackage{asymptote}
 \usepackage[normalem]{ulem}
 
+% Define the theorem, lemma, proposition and corollary environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[section]
+
 \setcounter{section}{-1}
 
 \title{Galois Theory for Rats}
@@ -35,7 +41,7 @@
         fifth degree is not solvable by radicals, and sheds light on many hidden aspects of polynomials and roots. In addition,
         Galois theory is applicable to various subjects of algebra, including group theory, topology and algebraic number theory.\\
         \\
-        The story behind Galois theory is also one of legend and tragedy. It's a well known anecdote among math people that Evariste
+        The story behind Galois theory is also one of legend and tragedy. It's a well known anecdote among math people that \'{E}variste
         Galois, the young genius behind Galois theory, died under mysterious circumstances in a duel at the age of 20. During his lifetime,
         he was a revolutionary mathematician, a literal revolutionary (he was an avid Republican during the French Revolution), and an ardent,
         impassioned soul. Studying Galois theory might give us some insight into his short, brilliant life and mathematics.\\
@@ -46,15 +52,88 @@
         theory, as well as the experience of learning something new, with the math community.
     \end{subsection}
     \\
+    \newpage
+
+    \begin{subsection}{Structure}
+        The structure of this handout is laid out as follows:\\
+        \\
+        First, we provide a statement and outline of the solvability criterion, and address key insights or building blocks to solving the problem.
+        We proceed to build the required theory up from the definition of a field to the solvability of polynomials of different degrees. Some asides
+        that are not critical to proving the final theorem but are interesting to explore nonetheless (e.g. a field-theoretic proof of
+        the Fundamental Theorem of Algebra) are included.\\
+        \\
+        A short justification of why I'm doing this: the path from basic field extensions all the way up to the insolvability of equations of degree
+        5 or higher is extremely long, winding and sometimes counterintuitive. Starting with all the prerequisites and working up to the final theorem
+        might be tedious or demoralizing (source: how I worked through Galois Theory). For someone with intuition on algebraic objects, starting with 
+        the theorem statement and building towards the proof may feel more logical and satisfying.\\
+        \\
+        In order to make this handout more short and concise (and less disgusting to read through), some proofs have been removed and deferred to the 
+        Proofs for Goats handout alongside this one. The proofs that remain are either 1) central or 2) fun to work through.
+    \end{subsection}\\
+    \\
+    
 
     \begin{subsection}{Acknowledgements}
         I would like to give thanks to all the brilliant rats I met. Also bro, gang and 
-        chief, Wilbur watermelon, and whoever supplies SUMaC with all the snacks every day.
+        chief, Wilbur watermelon, and whoever supplies SUMaC with all the snacks every day.\\
+        \\
+        In addition: my family, friends, coffee, Buldak ramen(or Korean food in general), Dumbit and Foole, and my favorite video games.
     \end{subsection}
 
 
 \end{section}
 \newpage
+
+
+
+
+
+
+
+
+
+\begin{section}{The Big Theorem}
+    \begin{subsection}{Who Was \'{E}variste Galois?}
+        The appeal of Galois Theory to most learners began from the legend of his life: according to anecdotes told by various textbooks
+        and professors, Galois during his lifetime was a genius and embittered revolutionary, who jotted down his research results the 
+        night before the duel that took his life. In order to do justice to the tales as well as the math, I'm including the short form of the 
+        full story that got me fascinated by Galois Theory here.\\
+        \\
+        At a glance, \'{E}variste Galois was a mercurial character as well as a mathematical genius. Tragic was his life story, it should be 
+        noted that most of his misfortunes were inflicted by himself. The memoirs he submitted for review containing his ingenious work 
+        were lost (interestingly, by other reputed mathematicians of the time including Cauchy and Fourier), and as retaliation he railed against
+        the "established order" of the French academic scene. He devoted much time to presenting himself as the tragic genius we know today, 
+        embracing his public image by setting himself on a pyre.\\
+        \\
+        Aside from a failed scholar (at least during his lifetime), Galois was also a failed revolutionary. An ardent Republican, he was imprisoned
+        once for publicly issuing death threats to the king of France, again for inciting unrest on Bastille day. It seems that to him, the world was 
+        cut cleanly into the right and the wrong, and he would die before crossing his principles for avoiding self-destruction. It also seems that he
+        considers himself always in the right.\\
+        \\
+        Common sense dictates that a soul burning with such passion would not burn for long. In May 1832, he was challenged to a duel under mysterious
+        circumstances. The eve of the duel he wrote a long letter to his friend Auguste Chevalier, summarizing (although not explaining in detail like
+        in the myth surrounding him) his research findings and praying that someone would come along and decode this mess. He died the next day, scarcely
+        21 years old, brave and confident till the end.\\
+        \\
+        The point of the story is not to dissuade mathematicians from fighting in duels. (Although if you're a mathematician reading this, please don't
+        fight in duels.) By catching a glimpse into Galois's life held to the highest of High Romanticism, we might get an idea of the origin of the 
+        beautiful Galois Theory, the mind behind it, and the vibrant era of academia that cast it.
+         % build image of Galois -- tragic genius (?)
+         % back up with incidences (failed revolutionary, lost memoir, duel)
+         % conclusion
+    \end{subsection}\\
+    \\
+
+    \begin{subsection}{Core of Galois Theory Explained}
+        As mentioned in the introduction, we start by stating the central theorem to the solvability problem:\\
+        \\
+        \begin{theorem}{(Solvability Criteria.)}
+            The polynomial $f(x)$ can be solved by radicals if and only if its Galois group is a solvable group.
+        \end{theorem}
+        
+    \end{subsection}
+    
+\end{section}
 
 
 
