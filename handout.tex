@@ -1,15 +1,28 @@
-\documentclass{article}
-
-\usepackage{amsmath}
-\usepackage{amsfonts}
+\documentclass[12pt]{article}
 \usepackage{asymptote}
 \usepackage[normalem]{ulem}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,amsfonts, enumitem, float, fancyhdr, color, comment, graphicx, environ,setspace, geometry}
+
 
 % Define the theorem, lemma, proposition and corollary environments
 \newtheorem{theorem}{Theorem}[section]
+\theoremstyle{remark}
 \newtheorem{lemma}{Lemma}[section]
+\theoremstyle{remark}
 \newtheorem{proposition}{Proposition}[section]
+\theoremstyle{remark}
 \newtheorem{corollary}{Corollary}[section]
+\theoremstyle{remark}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem{example}{Example}[section]
+\theoremstyle{remark}
+
+
+% header, which for some reason is not working
+% \lhead{Galois Theory for Rats}
+% \rhead{\section}
 
 \setcounter{section}{-1}
 
@@ -21,6 +34,7 @@
 \newpage
 \tableofcontents
 \newpage
+% so I should probably add polynomials over a field and irreducibility theorems somewhere in here
 
 \begin{section}{Before we Start}
     \begin{subsection}{Galois Theory for Rats: Definition}
@@ -122,14 +136,179 @@
          % back up with incidences (failed revolutionary, lost memoir, duel)
          % conclusion
     \end{subsection}\\
-    \\
+    \newpage
 
     \begin{subsection}{Core of Galois Theory Explained}
         As mentioned in the introduction, we start by stating the central theorem to the solvability problem:\\
-        \\
-        \begin{theorem}{(Solvability Criteria.)}
+        \begin{theorem}[(Solvability Criteria.)]
             The polynomial $f(x)$ can be solved by radicals if and only if its Galois group is a solvable group.
         \end{theorem}
+        The core intuition of Galois Theory is linking polynomials to fields. In order to prove the solvability criterion, 
+        we may start with a graph depicting the connection between groups (solvable groups as stated in Theorem 1.1) and fields
+        (representing polynomials):
+        % insert image of fields and groups and the correlation.
+
+        We fill in the boxes with a step-by-step approach. Representing polynomials using fields and their properties are established in 
+        Sections /*insert section number here*/, characterizing field extensions and their relationship to polynomials. In Section /* insert section number
+        here*/ we begin introducing Galois groups, filling the group side of Galois Theory. Section /*insert section number here*/ proves the Fundamental
+        Theorem of Galois Theory, the essential link between groups and fields. The last sections /*insert section number here*/ provides the cornerstone of
+        our proof, building from elements depicted in Figure 1.1 to the final proof of solvability criteria.
+
+        The broader idea behind the group theory, field theory and connection part:
+
+        \begin{enumerate}
+            \item The \textbf{group theory} side uses primarily the idea of \textit{Galois groups}, groups that are formed from permuting roots of polynomials. The
+        polynomial is solvable if and only if the chain of Galois groups (constructed in a specific manner, as we will see in Sections /*insert 
+        section number here*/) are solvable in each step (we will shortly define the notion of a \textit{solvable group}). 
+
+            \item The \textbf{field theory} side requires the definition of \textit{splitting field extensions}, which are formed by adjoining roots of polynomials
+        to a base field comprising the coefficients of the polynomial. In short, the splitting field of a polynomial is the smallest field extension that contains all
+        the roots of polynomial $f(x)$, and we shall see that they can be constructed in a way symmetric to solvable Galois groups.
+            
+            \item The correlation between groups and fields formed from the polynomial relies on the Fundamental Theorem of Galois Theory, stating that there exists a 
+        bijection between towers of field extensions and corresponding groups formed by permuting elements of the field (field automorphisms). Such a correspondence 
+        is called a \textit{Galois Correspondence}, and forms the cornerstone of many proofs building up to solvability criteria. It also gives some intuition
+        on why we formed groups and fields out of polynomials.
+        \end{enumerate}
+               
+    \end{subsection}
+    
+\end{section}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+\begin{section}{Basic Theory of Field Extensions}
+    \begin{subsection}{Field and Characteristics}
+        We begin by refreshing our memory of the definition of a field.
+        \begin{definition}{(Field.)}
+            A field satisfies the following field axioms:
+            \begin{enumerate}
+                \item Elements of a field form an abelian (commutative) group under addition (or any operation resembling addition);
+                \item Elements of a field form a group under multiplication (or any operation resembling multiplication);
+                \item Addition and multiplication satisfy the distributive law.
+            \end{enumerate}
+        \end{definition}
+
+        Examples of fields include the rationals $\mathbb{Q}$, the reals $\mathbb{R}$, and the cyclic groups of prime order 
+        (e.g. ${F_2}, {F_5}$). See if you can prove that these examples are fields. (When we prove something is a field, we
+        can simply check all the field axioms.)\\
+
+        An important attribute of a field is its \textit{characteristic}. Before defining the characteristic, we introduce a 
+        claim that makes the definition more intuitive:
+
+        \begin{proposition}
+            There exists a homomorphism $\phi: \mathbb{Z} \mapsto F$ for any field $F$ defined as 
+            $$\phi(m) = m\cdot1_F, m\in F.$$
+        \end{proposition}
+        \begin{proof}
+            $\phi(mn) = (mn)\cdot1_F = (m\cdot1_F)(n\cdot1_F) = \phi(m)\phi(n).$
+        \end{proof}
+        
+        \begin{definition}{(Characteristic of Field.)}
+            The \textit{characteristic} of a field $F$, denoted $ch(F)$, is the smallest positive integer $p$ such that 
+            $$p \cdot 1_F = 0_F, \text{where multiplication is defined as $1_F^p$ under addition.}$$
+            if such $p$ exists. $ch(F)$ is defined to be 0 otherwise.
+        \end{definition}
+
+        We can see that the characteristic of a field resembles 0 in some sense. Note that $ch(F)$ is defined as an integer
+        rather than a field element: the field element corresponding to $ch(F)$ would be $0_F$ to ensure that $F$ has no zero 
+        divisors.
+
+        There are only a few options for the characteristic of a field:
+        \begin{proposition}
+            The characteristic of a field is either 0 or a prime $p$.
+        \end{proposition}
+        \begin{proof}
+            It's easy to list some fields with characteristic 0: $\mathbb{Q}$ and $\mathbb{R}$ are two such fields. We only need
+            to prove that fields with characteristics other than 0 can only have prime characteristics.\\
+            \textit{Proof by Contradiction.} By the definition have a field, if $m,n$ are positive integers, we have
+            $$m\cdot 1_F + n\cdot 1_F = (m+n) \cdot 1_F \text{ and } (m\cdot1_F)(n\cdot1_F) = (mn) \cdot 1_F.$$
+            Now suppose that $ch(F) = n$ is composite. Then $n=ab$ for $a,b\neq1,$ so since $n\cdot1_F=0_F$:
+            $$(ab)\cdot1_F = (a\cdot1_F)(b\cdot1_F) = 0_F.$$
+            So either $a\cdot 1_F$ or $b\cdot1_F = 0_F$, so there exists an integer smaller than $n$ satisfying characteristic 
+            conditions, contradicting the minimality of characteristics. Therefore $ch(F) = n$ must be a prime if not 0.
+        \end{proof}
+
+        Note how Proposition 4.1 clarifies the definition of a characteristic: the proposition defines a map from an integer
+        multiple of $1_F$ to a field element, which corresponds to mapping $p\cdot1_F$ to $0_F$ in the definition
+        of $ch(F)$.
+
+    \end{subsection}
+
+
+    \begin{subsection}{Field Extensions and Roots}
+
+        \begin{subsubsection}{Introduction}
+            % Introduction to Field Extensions
+
+            Field theory and Galois theory are primarily concerned about forming new fields from known fields, otherwise known as 
+            field extensions. In group theory, you may have studied the effect of addiing an element to a group, which 
+            often requires the addition of many further elements in order for the result to also be a group. A field extension is 
+            similar: new fields are formed from a base field by adjoining 1 or more elements to the base field. Field extensions, 
+            combined with the roots of polynomials, have some interesting results and applications. By studying field extensions, 
+            we not only make significant progress towards our goal of solvability, but also gain a new perspective on previously known
+            structures, such as the rationals $\mathbb{Q}$, square roots of integers and the complex numbers $\mathbb{C}$.
+            
+        \end{subsubsection}
+
+        \begin{subsubsection}{Field Extension: Definition and Examples}
+            % define a field extension, degree of field extension, typical notation and examples.
+
+            \begin{definition}{(Field Extension.)}
+                If $K$ is a field containing a subfield $F$, then call $K$ a \textit{field extension} of $F$, denoted $K/F$.
+            \end{definition}
+
+            An important attribute of the field extension is its degree, in other words, the dimension of field extension $K$ 
+            over its base field $F$:
+
+            \begin{definition}{(Degree of Field Extension.)}
+                \\
+                The degree of field extension $K/F$, denoted $[K:F]$, is the dimension of $K$ as a vector space over $F$. In other
+                words, if the set $S=\{a_1, a_2, \cdots, a_n\}$ form a basis for $K$ over $F$ (i.e. $a_i$ are linearly independent
+                and every element in $K$ can be written as a linear combination of $a_i$, then $[K:F] = \mid S \mid.$)
+            \end{definition}
+
+            \textit{Note.} There is a common notation used for representing field extensions: if $F$ is the base field of the extension,
+            then $F(\alpha)$ denotes the field extension obtained by adjoining (adding) element $\alpha$ to $F$. \\
+            We can denote field extensions adjoining multiple elements similarly: let \(F\) be a base field. Then \(F(a_1, a_2, \cdots, a_n)\)
+            denotes the field extension obtained by adjoining \(\{a_1, a_2, \cdots, a_n\}\) to \(F\).
+            \\
+
+            \begin{example}{(Common Field Extensions.)}
+                \begin{enumerate}
+                    \item \([F:F]=1\) for any field \(F\). The basis of \(F\) over \(F\) is \(\{1_F\}\).
+                    \item The field extension \(\mathbb{Q}(\sqrt{2})\) over the rationals \(\mathbb{Q}\) has degree 2. Since \(\mathbb{Q}(\sqrt{2})\)
+                    comprises real numbers of the form \(a+b\sqrt{2}, a,b \in \mathbb{Q}\), the basis of \(\mathbb{Q}(\sqrt{2})\) over \(\mathbb{Q}\)
+                    is \(\{1,\sqrt{2}\}.\)
+                    \item Consider the field extension \(\mathbb{Q}(\sqrt[3]{2})\) obtained by adjoining \(\sqrt[3]{2}\) to the rationals.
+                    
+                \end{enumerate}
+                
+            \end{example}
+            
+        \end{subsubsection}
+        
         
     \end{subsection}
     

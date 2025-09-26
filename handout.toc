@@ -6,3 +6,8 @@
 \contentsline {section}{\numberline {1}The Big Theorem}{5}{}%
 \contentsline {subsection}{\numberline {1.1}Who Was \'{E}variste Galois?}{5}{}%
 \contentsline {subsection}{\numberline {1.2}Core of Galois Theory Explained}{6}{}%
+\contentsline {section}{\numberline {2}Basic Theory of Field Extensions}{7}{}%
+\contentsline {subsection}{\numberline {2.1}Field and Characteristics}{7}{}%
+\contentsline {subsection}{\numberline {2.2}Field Extensions and Roots}{8}{}%
+\contentsline {subsubsection}{\numberline {2.2.1}Introduction}{8}{}%
+\contentsline {subsubsection}{\numberline {2.2.2}Field Extension: Definition and Examples}{8}{}%
