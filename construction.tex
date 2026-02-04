@@ -1,0 +1,186 @@
+\documentclass[12pt]{article}
+\usepackage[inline]{asymptote}
+\usepackage[normalem]{ulem}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,amsfonts, asymptote, enumitem, float, fancyhdr, color, comment, graphicx, environ,setspace, geometry}
+
+
+% Define the theorem, lemma, proposition and corollary environments
+\newtheorem{corollary}{Corollary}[section]
+\theoremstyle{remark}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem{example}{Example}[section]
+\theoremstyle{remark}
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{remark}
+\newtheorem{lemma}{Lemma}[section]
+\theoremstyle{remark}
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{remark}
+
+\title{Straightedge and Compass Constructions}
+\author{Skyler Hu}
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\begin{section}{Introduction to Straightedge \& Compass Construction}
+    Straightedge and compass construction is defined as graphing with only a straightedge (item with no length label and a straight edge) and 
+    a compass. This allows only 3 operations given two points on a plane, \(A\) and \(B\):
+    \begin{enumerate}
+        \item Connecting the line segment \(AB\);
+        \item Drawing a circle with center \(A\) through point \(B\) (i.e. the radius is \(AB\));
+        \item Marking any point of intersection of known lines and circles.
+    \end{enumerate}
+
+    It is known from elementary geometry that the following can be achieved with straightedge and compass construction:
+    \begin{enumerate}
+        \item Constructing the perpendicular bisector of a given line segment (thus bisecting any line segment);
+        \item Constructing the angle bisector of any given angle; (this allows us to construct a right angle)
+        \item Constructing the sum or difference of two given line segments (achieved by drawing 2 circles);
+        \item Constructing a line through a given point that's parallel to a given line.
+    \end{enumerate}
+
+    Though appearing to be elementary geometry, straightedge and compass constructions have important implications for field theory and 
+    abstract algebra, specifically quadratic field extensions and cyclotomic extensions (see \textit{Roots of Unity}). In such construction problems,
+    we are interested in what lengths are constructible given a line segment of unit length 1. We can define the following from this idea:
+
+    \begin{definition}{(Constructible Numbers.)}
+        A real number \(x\) is \textit{constructible} if a line segment of length \(x\) can be constructed via straightedge and compass only from a 
+        line segment of length 1.
+    \end{definition}
+
+    Straightedge and compass construction problems are concerned with characterizing the constructible numbers as a subset of \(\mathbb{R}\). As we will 
+    see in the following sections, this characterization is achieved through field-theoretic proofs and helps us solve millennia-old problems on geometric 
+    constrcution.
+\end{section}
+
+\begin{section}{Three Classic Construction Problems}
+    These problems have existed for as long as people have studied mathematics, and are recently solved with straightedge and compass construction theory:
+    \begin{enumerate}
+        \item \textit{Duplicating the Cube} Is it possible to construct a cube with twice the volume of a given cube?
+        \item \textit{Trisecting the Angle} Is it possible to trisect an angle using straightedge and compass only?
+        \item \textit{Squaring the Circle} Is it possible to construct a square with the area of a given circle?
+    \end{enumerate}
+\end{section}
+
+\begin{section}{Basic Construction Rules}
+    \begin{proposition}{(The Four Operations via Construction.)}
+        Given line segments of length \(a,b\), we can construct the following:
+        \[\{a+b, a-b, ab, a/b, \sqrt{a}\}.\]
+        
+        \begin{proof}
+            \textbf{Addition and Subtraction.} This is known from elementary geometry.\\
+            \noindent\textbf{Multiplication and Division.} 
+            \begin{center}
+                \begin{asy}
+                    settings.outformat = "pdf";
+                    size(8cm);
+
+                    // Define vertices for outer triangle ADE
+                    pair D = (0,0);
+                    pair E = (6,0);
+                    pair A = (1.5,4);
+
+                    // Choose B on AD and C on AE such that ABC is similar to ADE
+                    real scale = 0.6; // scaling factor for inner triangle
+                    pair B = A + scale*(D - A);
+                    pair C = A + scale*(E - A);
+
+                    // Draw outer triangle ADE
+                    draw(D--A--E--cycle, black+1pt);
+
+                    // Draw inner triangle ABC
+                    draw(A--B--C--cycle, black+1pt);
+
+                    // Label segments
+                    label("$1$", (A+B)/2, S);  // BC = 1
+                    label("$a$", (A+C)/2, NE); // AC = a
+                    label("$b$", (A+D)/2, NW); // AD = b
+                    label("$ab$", (A+E)/2, NE); // AE = ab
+
+ 
+                \end{asy}
+            \end{center}
+
+            % I hate fucking asymptote and maybe I'll do this another time
+
+            \noindent \textbf{Square Roots.}
+            \begin{lemma}
+                In a right triangle, the square of the height on the hypotenuse is equal to the product of the two line segments to the left and right
+                of the height.
+                % insert image here
+            \end{lemma}
+
+            % insert image here
+        \end{proof}
+    \end{proposition}
+
+    We can characterize with Proposition 3.1 the real numbers that are constructible:\\
+    \noindent \textbf{Intersection of 2 straight lines.} Consider the general form of two straight lines:
+    \begin{align*}
+        a_1x+b_1y+c_1 &= 0\\
+        a_2x+b_2y+c_2 &= 0 
+    \end{align*}
+    By substituting \(y = -\frac{c_2+a_2x}{b}\), this amounts to solving a linear equation in terms of \(x\), which gives a linear combination of the coefficients. 
+    Since \(a_1, a_2, b_1, b_2, c_1, c_2\) are known from two points on the line within the field of constructible numbers \(F\), it could be said that solving for 
+    \((x,y)\) gives solutions that are also in \(F\).\\
+
+    \noindent\textbf{Intersection of a straight line and a circle.} The general form is 
+    \begin{align*}
+        ax + by + c &= 0\\
+        (x-h)^2 + (y-k)^2 &= r^2\\
+    \end{align*}
+    Again by taking the linear substitution \(y = -\frac{c+ax}{b}\), this amounts to solving a quadratic in terms of \(x\). The solution is therefore in a quadratic 
+    extension of \(F\).\\
+
+    \noindent\textbf{Intersection of two circles.} The general form of two circles Is
+    \begin{align*}
+        (x-h_1)^2 + (y-k_1)^2 &= r_1^2\\
+        (x-h_2)^2 + (y-k_2)^2 &= r_2^2
+    \end{align*}
+    To see that this is equivalent to the intersection of a circle and a straight line, take the difference of the two equations to get 
+    \begin{align*}
+        (x-h_1)^2 + (y-k_1)^2 &= r_1^2\\
+        2(h_1-h_2)x + 2(k_1-k_2)y + (h_1^2-h_2^2) + (k_1^2+k_2^2) &= r_1^2 - r_2^2
+    \end{align*}
+    This is the same as the previous case, and solving for \(x,y\) gives us at worst a quadratic extension over \(F\).\\
+    Since all constructions give either elements already in \(F\) or elements in a quadratic extension over \(F\), we can conclude that all constructible 
+    numbers are in an extension of degree \(2^k\) over \(\mathbb{Q}\):
+
+    \begin{theorem}{(What numbers are constructible?)}
+        If real number \(\alpha\) is obtained from base field \(F\) through straightedge and compass constructions, then \([F(\alpha) : F] = 2^k\).
+    \end{theorem}
+
+    We can derive the following:
+
+    \begin{theorem}{(Classic construction problems)}
+        None of the three classic construction problems: duplicating the cube, squaring the circle and trisecting the angle is achievable by 
+        straightedge and compass constructions.
+
+        \begin{proof}
+            \textbf{Duplicating the Cube.} This requires us to construct a cube of side length \(\sqrt[3]{2}\). Since \([\mathbb{Q}(\sqrt[3]{2}):\mathbb{Q}] = 3\),
+            and 3 is not a power of 2, \(\sqrt[3]{2}\) is not constructible.\\
+            \noindent\textbf{Squaring the Circle.} Given a circle of radius \(r\), we must construct a square with side length \(\sqrt{\pi}r\), which is constructible
+            if and only if \(\pi\) is constructible. It is known that \(\pi\) is not constructible -- there exists a proof that \(pi\) is transcendental, and for a 
+            number to be constructible it must be algebraic (see Theorem 3.1). Therefore it is impossible to construct a square with the same area of a given circle
+            using straightedge and compass.\\
+            \noindent\textbf{Trisecting the angle.} Given angle \(\theta\), \(\cos\theta\) is constructible since it's the horizontal distance from the point of intersection
+            of angle \(\theta\) and the unit circle to the \(y\)-axis. The problem is then rewritten: given \(\cos\theta\), is \(\cos\frac{\theta}{3}\) constructible?
+            We show that \(\cos\frac{\theta}{3}\) is not always constructible by considering a counterexample: \(\theta = 60^{\deg}\). Then the question is whether or not 
+            \(\cos20^{\deg}\) is constructible. The triple angle formula for cosines states that 
+            \[\cos60^{\deg} = 4\cos^3 20^{\deg} - 3\cos20^{\deg},\]
+            so, taking \(x = \cos20^{\deg}\), we want to solve the cubic 
+            \[4x^3-3x-\frac{1}{2} = 0, \text{ or } 8x^3 - 6x - 1= 0.\]
+            This is equivalent to \((2x)^3 - 3(2x) -1=0\). Taking \(y=2x\), the equation becomes \(y^3-3y-1=0\). It could be easily verified that this equation is irreducible
+            over \(\mathbb{Q}\) since it has no rational roots, so \([\mathbb{Q}(y):\mathbb{Q}] = 3\), which is not a power of 2, so \(\cos20^{\deg}\) is not constructible.
+        \end{proof}
+    \end{theorem}
+
+\end{section}
+
+\end{document}
