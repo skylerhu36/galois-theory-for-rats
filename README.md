@@ -40,5 +40,5 @@ This work is shared under the [Creative Commons Attribution-NonCommercial 4.0 In
 You are free to share and adapt the material with attribution, for non-commercial purposes.
 
 ## 👤 About the Author
-I'm a high school junior, algebra enthusiast and math tryhard, currently working on making engaging math available for everyone. 📫 Reach me via: https://github.com/skylerhu36/
-or zhifeihu2@gmail.com!
+I'm a high school junior, algebra enthusiast and math tryhard, currently working on making engaging math available for everyone. 
+📫 Reach me via: github.com/skylerhu36
