@@ -5,6 +5,7 @@
 *.log
 *.synctex.gz
 *.toc
+*.pre
 
 ## Bibliography files
 *.bbl
