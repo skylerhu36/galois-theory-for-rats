@@ -1,0 +1,37 @@
+## Core auxiliary files
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.toc
+
+## Bibliography files
+*.bbl
+*.blg
+*.bcf
+*.xml
+
+## Lists and Indexing
+*.lof
+*.lot
+*.out
+*.idx
+*.ind
+*.ilg
+
+## Beamer (presentations)
+*.nav
+*.snm
+*.vrb
+
+## PythonTeX / SageTeX
+*.pytxcode
+pythontex-files-*/
+*.sagetex.sage
+*.sagetex.py
+*.sagetex.scmd
+
+## Final output
+# Uncomment the line below if you do NOT want to track your PDF
+# *.pdf
