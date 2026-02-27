@@ -3,7 +3,7 @@
 \usepackage{amsmath,amsthm,amssymb,amsfonts, enumitem, float, fancyhdr, color, comment, graphicx, environ,setspace, subcaption, lastpage, tabularx, booktabs, caption}
 \captionsetup[subfigure]{width=0.85\linewidth}
 \usepackage{tikz}
-\usetikzlibrary{calc}
+\usetikzlibrary{calc, intersections, through}
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{Galois Theory for Rats}  
@@ -18,7 +18,7 @@
 
 % Define the theorem, lemma, proposition and corollary environmentsc
 
-\newtheorem{corollary}{Corollary}[section]
+\newtheorem{envname}{caption}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 \theoremstyle{definition}
@@ -29,6 +29,8 @@
 \newtheorem{lemma}{Lemma}[section]
 \theoremstyle{definition}
 \newtheorem{proposition}{Proposition}[section]
+\theoremstyle{definition}
+\newtheorem{corollary}{Corollary}[section]
 \theoremstyle{definition}
 
 
@@ -396,7 +398,7 @@
             We can consider a special case (this is the most widely used argument for this problem): consider \(\theta = 60^{\circ}, \cos 60^{\circ} = 1/2\). We only need to show that \(\cos 20^{\circ}\)
             is not constructible. Using the triple-angle identity for cosine we obtain:
             \[\cos \theta = 4\cos^3 \theta/3 - 3\cos \theta/3.\]
-            Substituting \(cos \theta/3 = x\) and \(cos 60^{\circ} = 1/2\), we have 
+            Substituting \(\cos \theta/3 = x\) and \(\cos 60^{\circ} = 1/2\), we have 
             \[4x^3 - 3x - 1/2 = 0 \Rightarrow (2x)^3 - 3(2x) - 1=0.\]
             Let \(y = 2x\). Then \(y^3 - 3y - 1=0\), and by the Rational Root Theorem the only possible rational root of this equation is \(-1\), which is apparently not a root of 
             \(y^3 - 3y - 1\). Therefore \(y^3 - 3y - 1\) is irreducible over \(\mathbb{Q}\), and its roots are in an extension of degree 3 over \(\mathbb{Q}\). Therefore \(y\) is not 
@@ -407,8 +409,290 @@
             \break
             \noindent\textbf{3. Squaring the Circle.} A circle of radius 1 has area \(\pi\), so this question is equivalent to asking whether or not \(\pi\) is constructible. The argument for classifying \(\pi\)
             as transcendental is well beyond the scope of this handout, but here we shall assume that \([\mathbb{Q(\pi)} : \mathbb{Q}]\) is infinite, so \(\pi\) is not constructible and it is impossible to construct a 
-            square with the area of a given circle. The proof of the transcendentality of \(pi\), unfortunately, is not included in the Proofs and Further Reading section because the author is also mystified. 
+            square with the area of a given circle. The proof of the transcendentality of \(\pi\), unfortunately, is not included in the Proofs and Further Reading section because the author is also mystified. 
         \end{proof}
     \end{theorem}
+\end{section}
+\newpage
+
+\begin{section}{Proofs and Further Reading}
+    \begin{subsection}{More Tools}
+        Euclid's initial definition of the compass and straightedge included a \textit{compass} and a straightedge with no markings of distance. However, in the modern world, we encounter more frequently a \textit{rigid}
+        compass that can preserve the distance between two points, and a \textit{ruler} which has markings of distance. How are the results different when we implement modern tools? First, we would 
+        assume the baseline: since a rigid compass and a ruler is `better' than a collapsing compass and straightedge (at least in the conventional sense), we would expect them to be able to do anything a 
+        collapsing compass and straightedge could do. This is true, at least in the case of a rigid vs. collapsing compass:
+        \begin{theorem}{(Euclid's Proposition 2.)}
+            It is possible, using a collapsing compass and straightedge, to construct a line segment equal to a given line segment with one end at a given point.
+            \begin{proof}
+                Given line segment \(AB\), we want to construct a line segment \(CF=AB\) with endpoint at \(C\).
+                \begin{figure}[H]
+                    \centering
+                    \begin{tikzpicture}[thick, line cap=round]
+
+                        % 1. Define base points
+                        \coordinate (A) at (0,0);
+                        \coordinate (B) at (1.2, 0.8);
+                        \coordinate (C) at (1.5, -1.2);
+
+                        % 2. Construct Equilateral Triangle ACD on AC
+                        % This uses the calc syntax: (C) rotated 60 degrees around (A)
+                        \coordinate (D) at ($(A)!1!60:(C)$);
+                        
+                        \draw[gray!60] (A) -- (C) -- (D) -- cycle;
+                        \node[left] at (A) {$A$};
+                        \node[below] at (C) {$C$};
+                        \node[above] at (D) {$D$};
+
+                        % 3. Define the Rays (Extended lines from D through A and C)
+                        \path[name path=rayDA] (D) -- ($(D)!4!(A)$);
+                        \path[name path=rayDC] (D) -- ($(D)!4!(C)$);
+                        \draw[gray, thin] (D) -- ($(D)!3.5!(A)$);
+                        \draw[gray, thin] (D) -- ($(D)!3.5!(C)$);
+
+                        % 4. Circle at A with radius AB (to find E)
+                        % We use 'name path' so we can find the intersection with the ray
+                        \path[name path=circleA] (A) circle [radius={veclen(1.2,0.8)}];
+                        \draw[blue] (A) -- (B);
+                        \draw[blue!30] (A) circle [radius={veclen(1.2,0.8)}];
+
+                        % 5. Find intersection E
+                        \fill[red, name intersections={of=rayDA and circleA, by=E}] 
+                            (E) circle (1.5pt) node[left] {$E$};
+
+                        % 6. Circle at D with radius DE (to find F)
+                        % We calculate the distance from D to E for the radius
+                        \path let \p1 = ($(E)-(D)$), \n1 = {veclen(\x1,\y1)} in 
+                            (D) circle (\n1) [name path=circleD];
+                        \draw[orange!50, dashed] let \p1 = ($(E)-(D)$), \n1 = {veclen(\x1,\y1)} in 
+                            (D) circle (\n1);
+
+                        % 7. Find intersection F on ray DC
+                        \fill[red, name intersections={of=rayDC and circleD, by=F}] 
+                            (F) circle (1.5pt) node[right] {$F$};
+
+                        % 8. Final Result: The circle at C with radius CF
+                        % This radius CF will exactly equal AB
+                        \draw[red, very thick] let \p1 = ($(F)-(C)$), \n1 = {veclen(\x1,\y1)} in 
+                            (C) circle (\n1);
+                        
+                        % Labels
+                        \fill (B) circle (1.5pt) node[above] {$B$};
+                    \end{tikzpicture}
+                \end{figure}
+                \begin{enumerate}
+                    \item Connect \(AC\) and construct equilateral triangle \(\triangle ACD\).
+                    \item Draw a circle centered at \(A\) with radius \(AB\). Find the intersection of this circle
+                    and \(AD\). Label it \(E\).
+                    \item Draw a circle centered at \(D\) with radius \(DE\). Find the intersection of this circle 
+                    and \(CD\). Label it \(F\). Then \(CF\) is a line segment with endpoint \(C\) and length \(CF=AB\).
+                \end{enumerate}
+            \end{proof}
+        \end{theorem}
+
+        Euclid's Proposition 2 gives us that a rigid compass is equivalent to a collapsing compass: a rigid compass preserves distance, 
+        and a collapsing compass also could duplicate a distance (with some extra steps). What about a ruler? It turns out that a ruler is 
+        slightly more powerful than the straightedge (as one would expect it to be): 
+        
+        \begin{theorem}{(Ruler-and-Compass Construction.)}
+            If \(a\in F'\) is obtained from a base field \(F\) using a series of ruler-and-compass constructions, then \([F':F] = 2^m 3^n\)
+            for some nonnegative integers \(m,n\). 
+        \end{theorem}
+        The ruler enables us to construct extensions of degrees 2 and 3 with its `sliding' operation. Therefore, ruler-and-compass construction 
+        allows us to construct extensions of degrees 2, 3, 4 and their powers. What about degree 5? If you still remember what Galois Theory is about,
+        you might have a very good answer for whether or not we can construct an extension of degree 5.
+        
+        \begin{corollary}
+            Two of the 3 classic construction problems, \textbf{(1)} trisecting the angle and \textbf{(2)} doubling the cube, are obtainable using 
+            ruler and compass construction.
+        \end{corollary}
+    \end{subsection}
+
+    \begin{subsection}{Less Tools}
+        Let's consider the flip side, since mathematicians always like to go looking for trouble. Compass and straightedge construction requires \textit{both}
+        a compass and a straightedge. What happens if we only have a compass or a straightedge?\\
+        \break
+        \noindent\textbf{Compass-Only Construction.} Suppose you don't like carrying around a straightedge - a piece of infinitely long wood can be unwieldy 
+        sometimes. Can you still do the construction problems as usual? 
+        \begin{theorem}{(Mohr-Mascheroni Theorem.)}
+            Any construction that could be done with a compass and straightedge, can be done with a compass only.
+            \begin{proof}
+                We only need to show that the 3 basic operations can be done with compass only (see \textbf{Definition 1.2}). For length purposes (and the 
+                unfortunate discrepancy of literature on this specific subject), this handout only provides the `building blocks' of the proof: \textbf{(1)} Reflection 
+                across a line, \textbf{(2)} Inversion through a circle, and \textbf{(3)} Finding the center of a circle through three points on the circle.\\
+                \break
+                \noindent\textbf{(1) Reflecting a point across a line.} We can recall that compass and straightedge construction allows for reflecting points across a line.
+                We can do this with compass only:\\
+                \noindent Suppose we want to construct the point \(C\) symmetric across the line \(AB\).
+                \begin{figure}[H]
+                    \centering
+                    \begin{tikzpicture}[thick, scale=1.2]
+                        \coordinate (A) at (0,0);
+                        \coordinate (B) at (3,1);
+                        \coordinate (C) at (1,2);
+
+                        % Draw the line (faded, as we only use points A and B)
+                        \draw[gray!30] ($(A)!-0.5!(B)$) -- ($(A)!1.5!(B)$);
+                        \fill (A) circle (1.5pt) node[below] {$A$};
+                        \fill (B) circle (1.5pt) node[below right] {$B$};
+                        \fill[blue] (C) circle (2pt) node[above] {$C$};
+
+                        % 2. Compass Step 1: Circle at A through C
+                        % We use 'name path' to find intersections later
+                        \path[name path=circA] (A) circle [radius={veclen(1,2)}];
+                        \draw[blue!20] (A) circle [radius={veclen(1,2)}];
+
+                        % 3. Compass Step 2: Circle at B through C
+                        % Radius is distance BC: sqrt((3-1)^2 + (1-2)^2) = sqrt(5)
+                        \path[name path=circB] (B) circle [radius={veclen(3-1,1-2)}];
+                        \draw[green!20] (B) circle [radius={veclen(3-1,1-2)}];
+
+                        % 4. Find the intersections of the two circles
+                        % One is C, the other is the reflection C'
+                        \fill [red, name intersections={of=circA and circB, by={C_orig, Cprime}}]
+                            (Cprime) circle (2pt) node[below right] {$C'$};
+
+                        % Draw visual confirmation of the reflection
+                        \draw[dashed, red!50] (C) -- (Cprime);
+                    \end{tikzpicture}
+                \end{figure}
+                Construct two circles through \(C\), one centered at \(A\) (blue) and one centered at \(B\) (green). There will be two intersections of 
+                \(\odot A\) and \(\odot B\): one is \(C\), and the other is \(C'\), the reflection of \(C\) across \(AB\).\\
+                \break
+
+
+                \noindent\textbf{2. Inversion through a Circle.} Before we start, we must be familiar with the definition of geometric inversion:
+                \begin{definition}{Inversion through a Circle.}
+                    With respect to a reference circle \(\odot O\) with radius \(r\), the \textit{inversion} of point \(P\) is the point \(P'\) lying on the ray \(OP\) such that 
+                    \[OP \cdot OP' = r^2.\]
+                    \begin{figure}[H]
+                        \centering
+                        \begin{tikzpicture}[thick, scale=2]
+
+                            % 1. Define the Center (O) and Radius (R)
+                            \coordinate (O) at (0,0);
+                            \newcommand{\radius}{1.5} 
+
+                            % Draw Circle of Inversion
+                            \draw[dashed, gray] (O) circle (\radius);
+                            \fill (O) circle (1.5pt) node[below left] {$O$};
+
+                            % 2. Define Point P
+                            \coordinate (P) at (2.5, 0.5);
+                            \fill[blue] (P) circle (1.5pt) node[right] {$P$};
+
+                            
+                            % Visually, we place P' at a reasonable fraction along the ray
+                            \coordinate (Pprime) at ($(O)!0.3!(P)$); 
+                            \fill[red] (Pprime) circle (1.5pt) node[anchor=south east] {$P'$};
+
+                            % Draw the result
+                            \draw[blue!30] (O) -- (P);
+                            \fill[red] (Pprime) circle (1.5pt) node[above left] {$P'$};
+
+
+                        \end{tikzpicture}
+                    \end{figure}
+                \end{definition}
+                In a sense, inversion with respect to a circle allows us to map points in a plane onto points in a circle, with points at 
+                infinite distance mapped to the center and points inside the circle to points in the exterior. In the context of the Mohr-Mascheroni
+                Theorem, we are more concerned about the former -- how to map points of infinite distances on straight lines into a circle. You can 
+                visualize it as pulling a tissue through a ring by the center of the tissue: points at infinite distance fold and collapse into the circle.
+                Here's how we do it with compass only (with similar triangles): \\
+                \break
+                \begin{figure}[H]
+                    \centering
+                    \begin{tikzpicture}[thick, scale=1.5]
+                        % 1. Setup
+                            \coordinate (O) at (0,0);
+                            \def\R{2} 
+                            \draw[dashed, gray] (O) circle (\R);
+                            \fill (O) circle (1.5pt) node[below left] {$O$};
+
+                            % 2. Point P
+                            \coordinate (P) at (3.5, 0);
+                            \fill (P) circle (1.5pt) node[right] {$P$};
+
+                            % 3. Circle at P through O to find M1
+                            % Radius is 3.5
+                            \path[name path=circP] (P) circle (3.5);
+                            \path[name path=invC] (O) circle (\R);
+                            \path [name intersections={of=circP and invC, by={M1, M2}}];
+                            
+                            \draw[blue!20] (P) circle (3.5);
+                            \fill (M1) circle (1.5pt) node[above] {$M$};
+
+                            % 4. Circle at M1 through O to find P'
+                            % Radius is R=2
+                            \coordinate (Pprime) at (1.14, 0); % Calculated: 2^2 / 3.5
+                            \draw[red!20] (M1) circle (\R);
+                            \fill[red] (Pprime) circle (1.5pt) node[below left] {$P'$};
+
+                            % 5. Highlight Similar Triangles
+                            % Triangle O-M1-P
+                            \draw[blue, opacity=0.5] (O) -- (M1) -- (P) -- cycle;
+                            % Triangle O-P'-M1
+                            \draw[red, opacity=0.5] (O) -- (Pprime) -- (M1) -- cycle;
+
+                    \end{tikzpicture}
+                \end{figure}
+                Suppose we want to find the inversion of \(P\) (in this case external to \(\odot O\)) with respect to \(\odot O\).
+                \begin{enumerate}
+                    \item Construct circle \(\odot P\) with radius \(OP\). There are two points of intersection of \(\odot O\) and \(\odot P\):
+                    they are symmetric, so pick one of them and label it \(M_1\) The other one is \(M_2\) (not shown).
+                    \item Construct circle \(\odot M_1\) with radius \(OM_1\) (i.e. radius of \(\odot O\)) and find its intersection with \(OP\). Label 
+                    it \(P'\). Then \(P'\) is the inverse of the point \(P\) relative to \(\odot O\).\\
+                    (If you're wondering how to locate \(P'\) when we don't have the ray \(OP\): \(OP\) is the perpendicular bisector of the line segment 
+                    \(M_1 M_2\), so we can find \(P'\) by drawing two arcs centered at \(M_1\) and \(M_2\) both with radius = \(OM\).)
+                \end{enumerate}
+                We can show that \(P'\) is the inverse: since \(\triangle MOP\) and \(\triangle MOP'\) are both isoceles with a common bottom angle, \(\triangle MOP' \sim \triangle PMO\)
+                and 
+                \[\frac{OP'}{OM} = \frac{OM}{OP}.\]
+                Therefore \(OP' \cdot OP = r^2\) where \(r\) is radius of \(\odot O\).\\
+                \break
+                \noindent\textbf{3. Finding center of circle through 3 given points.} This problem is known as one of \textit{Napoleon's Problems}, consisting 
+                of a couple compass-only construction problems. Napoleon, an amateur mathematician himself, had reputedly been related to this problem. (When you're French,
+                mathematical and revolutionary\dots)\\
+            \end{proof}
+        \end{theorem}
+
+
+        \break
+        \noindent\textbf{Straightedge-Only Construction.} Suppose your compass was confiscated at the TSA for being a public safety hazard. In that case, you might want this:
+        \begin{theorem}{(Poncelet-Steiner Theorem.)}
+            Any construction that could be done with a compass and straightedge, can be done with a straightedge only, provided that there is already a circle on the plane.
+        \end{theorem}
+        \noindent\textbf{Nothing -- only paper.} Suppose you left your compass and straightedge at home but still came to algebra class anyway. You pick up the paper you were supposed to 
+        draw diagrams on remorsefully. Then you turn it over in your hand, and an idea comes to mind. Can you perform the classic constructions using nothing but folding 
+        the paper?\\
+        \break
+        With origami, folding paper as a means of construction, we enter into the realm of \textit{Huzita-Hatori Axioms}, a set of axioms that dictate what can be done with paper folding just 
+        as the three rules to compass-straightedge construction. The full set of axioms is given here:
+        \begin{theorem}{(Huzita-Hatori Axioms.)}
+            The 7 following constructions are allowed using origami:
+            \begin{enumerate}
+                \item Given two distinct points \(P_1\) and \(P_2\), there is a unique fold passing through both of them;
+                \item Given two distinct points \(P_1\) and \(P_2\), there is a unique fold that places \(P_1\) onto \(P_2\);
+                \item Given two lines \(l_1\) and \(l_2\), there is a fold that places \(l_1\) onto \(l_2\);
+                \item Given a point \(P_1\) and a line \(l_1\), there is a unique fold perpendicular to \(l_1\) that passes through point \(P_1\).
+                \item Given two points \(P_1\) and \(P_2\) and a line \(l_1\), there is a fold that places \(P_1\) onto \(l_1\) and passes through \(P_2\).
+                \item Given two points \(P_1\) and \(P_2\) and two lines \(l_1\) and \(l_2\), there is a fold that places \(P_1\) onto \(l_1\) and \(P_2\) onto \(l_2\).
+                \item Given one point \(P\) and two lines \(l_1\) and \(l_2\), there is a fold that places \(P\) onto \(l_1\) and is perpendicular to \(l_2\).
+            \end{enumerate}
+        \end{theorem}
+        You can grab a piece of paper and try out these constructions. Even though you've probably encountered origami in kindergarten, remember that for whatever thing you think of there is a group 
+        of people (usually mathematicians) who hold it to the highest interest!
+    \end{subsection}
+
+    \begin{subsection}{What's Next?}
+        This handout -- on compass and straightedge constructions -- has begun as a required course for anyone into field theory. Construction is an extremely rich topic and there are still many things we haven't 
+        covered, including:
+        \begin{itemize}
+            \item Full proofs of the Mohr-Mascheroni, Poncelet-Steiner theorems and the Huzita-Hatori axioms;
+            \item Euler's construction of \(n-\)gons where \(n\) is a Fermat prime, specifically the construction of the \(17-\)gon (and I'm terrifically sorry for this exclusion -- I know it's a fan favorite 
+            and has very important implications for field extensions!);
+            \item Euclid's Propositions (the things we take for granted);
+        \end{itemize}
+        \noindent these provide a guide for anyone fascinated by construction problems and hoping to explore further.
+    \end{subsection}
 \end{section}
 \end{document}
