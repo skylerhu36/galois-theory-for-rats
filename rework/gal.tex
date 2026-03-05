@@ -1,0 +1,280 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in, bottom = 1.5in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,amsfonts, enumitem, float, fancyhdr, color, comment, graphicx, environ,setspace, subcaption, lastpage, tabularx, booktabs, caption}
+\usepackage{tikz, tikz-cd}
+\captionsetup[subfigure]{width=0.85\linewidth}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Galois Theory for Rats}  
+\rhead{Galois Theory 101}
+\fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
+\newlength{\myfootheight}
+\setlength{\myfootheight}{35pt} 
+\renewcommand{\footrulewidth}{0.4pt}
+\setlength{\headheight}{35pt}
+\pagenumbering{arabic}
+
+
+% Define the theorem, lemma, proposition and corollary environmentsc
+
+\newtheorem{corollary}{Corollary}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{definition}
+\newtheorem{lemma}{Lemma}[section]
+\theoremstyle{definition}
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{definition}
+
+\AtBeginDocument{%
+  \mathchardef\stdcomma=\mathcode`,
+  \mathcode`,="8000
+}
+\begingroup\lccode`~=`, \lowercase{\endgroup\def~}{\stdcomma\,}
+
+\title{Galois Theory for Rats - Galois Theory 101}
+\author{Skyler Hu}
+
+\begin{document}
+\linespread{1.05}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\begin{section}{Introduction}
+    After our prerequisites (Field Extensions, Field Representation \& Construction), hopefully you have gained some basic ideas of 
+    field theory. If so, congratulations! You are officially a graduate of Galois Theory kindergarten and can now move on to the  
+    \textit{real} Galois Theory. Warning: the math is going to get insidious from now on, so be prepared.\\
+    \break
+    In this fourth handout of Galois Theory for Rats, we take the crucial step from fields to groups -- the core of Galois Theory, and 
+    show how groups, fields and polynomials are closely interrelated. After some preliminary definitions, we get to enjoy the \textit{Galois 
+    Correspondence} (or \textit{The Fundamental Theorem of Galois Theory}), where everything we've learned will start to fall together and 
+    (ideally) you will understand why Galois Theory is considered one of the most beautiful branches of mathematics. Note that from now on, 
+    logic and proofs take up a significantly greater part of the handouts, and unlike the previous ones where proofs for most results and optional,
+    you will be forced to understand proofs, some of them rather painful. You are encouraged to read what you don't understand as many times 
+    as you need to -- this is the journey of every junior mathematician.
+\end{section}
+
+\newpage
+
+\begin{section}{Fields' Groups and Groups' Fields}
+    In this section we introduce some definitions central to Galois Theory. These definitions are mainly established through the process of 
+    creating groups from fields, fields from groups and both from polynomials. We start with another definition ending in `-morphism':
+    \begin{definition}{(Field Automorphism)}
+        An isomorphism \(\sigma\) of field \(K\) is called an \textit{autormorphism} if it maps every element in \(K\) onto elements in \(K\).
+        The collection of automorphisms of a field \(K\) is denoted \(Aut(K)\).
+    \end{definition}
+    There exists many automorphisms of a field \(K\) since there are multiple ways to shuffle the elements of \(K\) around, and it follows naturally 
+    that we'd be interested in a special category of field automorphisms: these automorphisms map some elements onto themselves.
+    \begin{definition}
+        An automorphism \(\sigma\in Aut(K)\) is said to \textit{fix} an element \(\alpha \in K\) if \(\sigma \alpha = \alpha\). If \(F\) is a subset/subfield 
+        of \(K\), then an automorphism of \(K\) is said to \textit{fix \(F\)} if it fixes every element in \(F\). \(Aut(K/F)\) is defined as the collection 
+        of automorphisms of \(K\) fixing \(F\).
+    \end{definition}
+
+    \begin{proposition}{(Automorphisms form a group.)}
+        The collection of automorphisms of field \(K\), \(Aut(K)\), is a group under composition. It has subgroup \(Aut(K/F)\) for \(F\) a subfield of \(K\).
+        \begin{proof}
+            Can you see that this is obvious? (Hint: check group axioms)
+        \end{proof}
+    \end{proposition}
+
+    Now that we've seen some very basic properties of automorphisms, we're ready to address a common statement made about Galois Theory: the permutation of roots. 
+    Though at this point we still have a long way to go until we learn precisely how root permutation relates to solvability, right now we can show that automorphisms 
+    permute the roots of polynomials. More specifically:
+
+    \begin{proposition}{(Automorphism permutes roots.)}
+        Let \(K/F\) be a field extension and let \(\alpha\) be algebraic over \(F\). Then for any automorphism \(\sigma \in Aut(K/F)\), \(\sigma\alpha\) is a root 
+        of the minimal polynomial of \(\alpha\) over \(F\), i.e. \(Aut(K/F)\) permutes the roots of irreducible polynomials, and any polynomial in \(F[x]\) having 
+        \(\alpha\) as a root also has \(\sigma \alpha\) as a root.
+        \begin{proof}{(Short and Easy!)}
+            Let \(\alpha\) be a root of the polynomial \(f(x)\in F[x]\)
+            \[f(x) = a_n x^n a_{n-1} x^{n-1} + \ldots + a_1 x + a_0.\]
+            Then \(a_n \alpha^n + a_{n-1} \alpha^{n-1} + \ldots + a_1 \alpha + a_0=0.\) Applying \(\sigma\) to each term gives us 
+            \[\sigma(a_n \alpha^n) + \sigma(a_{n-1} \alpha^{n-1}) + \ldots + \sigma(a_1 \alpha) + \sigma(a_0) = \sigma(0).\]
+        \end{proof}
+        \noindent\textit{Note.} The \textit{minimal polynomial} of \(\alpha\) over \(F\) is defined to be the irreducible polynomial \(m(x)\in F[x]\) of least degree
+        having \(\alpha\) as a root; in a sense, the most simple polynomial with \(\alpha\) as a root. It is often algebraic shorthand to say that something (in this case \(\sigma\alpha\))
+        is the root of \(m(x)\) instead of `every polynomial having \(\alpha\) as a root also has \(\sigma\alpha\) as a root.'
+    \end{proposition}
+
+    \begin{example}
+        \begin{enumerate}
+            \item Consider the field extension \(\mathbb{Q}(\sqrt{2})\). If \(\tau\) is an automorphism of \(\mathbb{Q}(\sqrt{2})\) (i.e. \(\tau\in Aut(\mathbb{Q}(\sqrt{2}))\)),
+            then \(\tau(\sqrt{2}) = \pm \sqrt{2}\), which are both roots of the minimal polynomial of \(\sqrt{2}\) over \(\mathbb{Q}\), which is \(x^2-2\).\\
+            Since \(\tau\) fixes \(\mathbb{Q}\), we know that \(\tau\) is of the form
+            \[\tau(a+b\sqrt{2}) = a\pm b\sqrt{2}.\]
+            \(\tau(\sqrt{2}) = \sqrt{2}\) is the identity automorphism, and  \(\tau(\sqrt{2}) = -\sqrt{2}\) has order 2, so the group \(Aut(\mathbb{Q}(\sqrt{2})/\mathbb{Q})\)
+            is the cyclic group of order 2.
+
+            \item Consider the field extensions \(\mathbb{Q}(\sqrt[3]{2})/\mathbb{Q}\). You might be tempted to think that the automorphism group with \(\mathbb{Q}\) fixed is a cyclic group of order 3, but consider this:
+            The minimal polynomial of \(\sqrt[3]{2}\) is \(x^3-2\), which has one root \(\sqrt[3]{2}\) with multiplicity 3. Therefore the automorphism fixing \(\mathbb{Q}\) also fixes \(\sqrt[3]{2}\) (and fixes 
+            \(\sqrt[3]{4}\) for that matter), and \(Aut(\mathbb{Q}(\sqrt[3]{2})) = \{1\}/\)
+        \end{enumerate}
+    \end{example}
+
+    We have seen that field extensions can create groups by considering the automorphism group of a field \(F\) (usually fixing a subfield of \(F\)). Now, in order to fully appreciate the relationship between these 
+    algebraic structures, we will see how groups can create fields:
+
+    \begin{proposition}{(Field Extensions from Groups)}
+        Let \(H \leq Aut(K)\) be a subgroup of \(Aut(K)\). The collection \(F\) of elements in \(K\) that are fixed by all elements in \(H\) form a subfield of \(K\).
+        \begin{proof}
+            Check field axioms. Be sure to use the definition of an isomorphism that \(\tau(ab) = \tau(a)\tau(b)\).
+        \end{proof}
+    \end{proposition}
+
+    \textbf{Proposition 2.3} gives us a field from considering an automorphism group: the elements that are fixed by every possible automorphism form a field. This leads naturally to the definition of a 
+    \textit{fixed field}:
+
+    \begin{definition}{(Fixed Field)}
+        If \(H\) is a subgroup of \(Aut(K)\), the group of automorphisms of \(K\), then the subfield \(F\) of \(K\) that is fixed by all elements of \(H\) is called the fixed field of \(H\).
+    \end{definition}
+
+    \begin{example}{(Fixed fields)}
+        We will use the same examples as \textbf{Example 2.1} about automorphism groups:
+        \begin{enumerate}
+            \item The fixed field of \(Aut(\mathbb{Q}(\sqrt{2})/\mathbb{Q})\) is \(\mathbb{Q}\). A fixed field must have every element fixed by 
+            every possible automorphism.
+            \item The fixed field of \(Aut(\mathbb{Q}(\sqrt[3]{2})/\mathbb{Q})\) is \(Aut(\mathbb{Q}(\sqrt[3]{2}))\) since the only automorphism is the identity.
+        \end{enumerate}
+    \end{example}
+
+    In this section so far we have defined all the tools we need to stitch groups and fields together -- field create groups by automorphism, and groups create fields by 
+    considering fixed fields. Keep these definitions in mind: we are accelerating!
+\end{section}
+
+\newpage
+
+\begin{section}{Getting Galois}
+    In this section we prove some results concerning the relationship between groups and fields using the definitions from Section 2. `A few results' may be an understatement -- the upcoming propositions 
+    are central to piecing together the proof of the Galois Correspondence, where everything will start making sense. So fear not if the motivation behind these results seem unclear on a first read: 
+    come back when you completely understand everything in Section 4 and I promise you it's going to look a lot prettier. (At least, I hope that you don't read this handout only once.)\\
+
+    \textit{Note on Notation.} In order to keep the proofs short I have chosen not to define every single algebraic object in this section (and in the following sections). A general rule of thumb 
+    is that \(E,G,H\) are groups and \(F,K,L\) are fields unless otherwise specified. We're also going to use \(E \leq F\) to denote `\(E\) is a subgroup of \(F\)' and \(F\subseteq K\) to denote 
+    `\(F\) is a subfield of \(K\)',so apologies if you grew up using another notation.
+
+    \begin{proposition}{(Inclusion-reversing Correspondence)}
+        \begin{enumerate}
+            \item If \(F_1 \subseteq F_2 \subseteq K\), then \(Aut(K/F_2) \leq Aut(K/F_1)\).
+            \item If \(H_1 \leq H_2 \leq Aut(K)\) and \(H_1, H_2\) have fixed fields \(F_1, F_2\), then \(F_2 \subseteq F_1\).
+        \end{enumerate}
+
+        \begin{proof}
+            \begin{enumerate}
+                \item For every \(h\in Aut(K/F_2)\) fixing \(F_2\), \(h\) is also in \(Aut(K/F_1)\) since \(F_1 \subseteq F_2\), so \(Aut(K/F_2 \leq Aut(K/F_1))\).
+                \item For every element fixed by some \(h\in H_2\), the element must be fixed by every \(h\in H_1\) since \(H_1 \leq H_2\). Therefore \(F_2 \subseteq F_1\). 
+            \end{enumerate}
+        \end{proof}
+    \end{proposition}
+
+    \begin{proposition}{(Degree of Extension vs. Order of Group)}
+        Let \(E\) be the splitting field over \(F\) of the polynomial \(f(x) \in F[x]\). Then 
+        \[\left|Aut(E/F)\right| \leq [E:F].\]
+    \end{proposition}
+    This proof requires a slightly more nuanced argument and is therefore delegated to the Proofs section. (If you're interested: this is one of the few instances 
+    in algebra that proof by induction makes an appearance.)\\
+    \break
+    \textbf{Proposition 3.2} allows us to relate automorphism groups and fixed fields on a numerical level. Now we have the ideas we need to start looking at things
+    named after Galois:
+
+    \begin{definition}{(Galois group.)}
+        If \(f(x)\) is a separable polynomial over \(F\), then the \textit{Galois group} of \(f(x)\) over \(F\)
+        is the group of automorphisms of the splitting field of \(f(x)\) over \(F\). The Galois group of a field extension is denoted 
+        \(Gal(K/F)\).
+    \end{definition}
+
+    If you're wondering where the separability condition comes from:
+
+    \begin{definition}{(Galois extension.)}
+        A field extension \(K/F\) is defined to be Galois if it is:
+        \begin{enumerate}
+            \item \textbf{(1)} Normal: if \(x\in K\) has minimial polynomial \(m(x) \in F[x]\), then every root of \(m(x)\) is in \(K\).
+            \item \textbf{(2)} Separable: if \(x\in K\) has minimial polynomial \(m(x) \in F[x]\), then \(m(x)\) has distinct roots in its splitting field.
+        \end{enumerate}
+        Relationship between Galois group and Galois extension: the automorphism group of \(K/F\) is Galois if and only if \(K/F\) is a Galois extension. This 
+        is by definition.
+    \end{definition}
+
+    \textit{Note.} We've introduced the definition of the normality and separability of field extensions here. If this bothers you, simply acknowledge that in 
+    Galois Theory we usually only care about separable, irreducible (and sometimes minimal) polynomials. If you're wondering why a Galois extension is defined this way,
+    it's a little secret :)\\
+
+    
+    Things start to get slightly abstract around here so we introduce some examples. Not everything may be spelled out from now on, so if you don't understand 
+    where a statement came from you can think about it in terms of definitions.
+    \begin{example}{(Galois Groups \& Extensions)}
+        \begin{enumerate}
+            \item The extension \(\mathbb{Q}(\sqrt{2})/\mathbb{Q}\) is Galois (why?) with Galois group isomorphic to \(\mathbb{Z}/2\mathbb{Z}\):
+            \begin{align*}
+                1 &: a+b\sqrt{2} \mapsto a+b\sqrt{2}\\
+                \sigma &: a+b\sqrt{2} \mapsto a-b\sqrt{2}
+            \end{align*}
+
+            \item \(\mathbb{Q(\sqrt[3]{2})}/\mathbb{Q}\) is not Galois since \(\left|Aut(\mathbb{Q}(\sqrt[3]{2})/\mathbb{Q})\right| = 1\). \(\mathbb{Q}(\sqrt[3]{2})\)
+            is also not the splitting field of any polynomial. (If you're considering \(x^3-2\): it has splitting field \(\mathbb{Q}(\sqrt[3]{2}, \omega)\) where \(\omega\)
+            is a primitive third root of unity. More on roots of unity in our next handout.)
+
+            \item \(\mathbb{Q}(\sqrt{2},\sqrt{3})/\mathbb{Q}\) is Galois since it is the splitting field of the separable polynomial \((x^2-2)(x^2-3)\). The elements in its 
+            automorphism group (a Galois group) are:
+            \begin{align*}
+                1 &: \sqrt{2} \mapsto \sqrt{2}, \sqrt{3} \mapsto \sqrt{3}\\
+                \sigma &: \sqrt{2} \mapsto -\sqrt{2}, \sqrt{3} \mapsto \sqrt{3}\\
+                \tau &: \sqrt{2} \mapsto \sqrt{2}, \sqrt{3} \mapsto -\sqrt{3}\\
+                \sigma\tau &: \sqrt{2} \mapsto -\sqrt{2}, \sqrt{3} \mapsto -\sqrt{3}
+            \end{align*}
+            which gives the automorphism group as the Klein-4 group.
+        \end{enumerate}
+    \end{example}
+\end{section}
+
+\newpage
+
+\begin{section}{The Galois Correspondence}
+    I will give you a peek:
+    \begin{figure}[H]
+        \centering
+        \begin{tikzcd}[row sep = small, column sep = large, arrows=no head]
+            K\arrow[d] \arrow[r]& 1\arrow[d]\\
+            F_1\arrow[d] \arrow[r] & G_i\arrow[d]\\
+            F_2\arrow[d] \arrow[r] & G_{i-1}\arrow[d]\\
+            \ldots\arrow[d]\arrow[r] & \ldots\arrow[d]\\
+            F_i\arrow[d]\arrow[r] & G_1\arrow[d]\\
+            F\arrow[r] & H
+        \end{tikzcd}
+    \end{figure}
+
+    No reaction? Here's the complete version:
+    \begin{theorem}{(Fundamental Theorem of Galois Theory)}
+        Let \(K/F\) be a Galois extension and set \(G=Gal(K/F)\). Then there is a bijection:
+        \begin{figure}[H]
+        \centering
+        \begin{tikzcd}[row sep = small, column sep = large, arrows=no head]
+            K\arrow[d] \arrow[r]& 1\arrow[d]\\
+            F_1\arrow[d] \arrow[r] & H_i\arrow[d]\\
+            \ldots\arrow[d]\arrow[r] & \ldots\arrow[d]\\
+            F\arrow[r] & G
+        \end{tikzcd}
+        \caption{subfields of \(K \mapsto\) subgroups of \(G\) in reverse-inclusion}
+    \end{figure}
+    Under this correspondence:
+    \begin{enumerate}
+        \item This correspondence is inclusion-reversing, i.e if \(E_1 \to H_1, E_2 \to H_2\), then \(E_1\subseteq E_2 \Leftrightarrow H_2 \leq H_1.\)
+        \item \([K:E_k] = H_k\) and \([E_k:F] = \mid G: H_k\mid\)
+        \item \(K/E_k\), the intermediate fields over \(F\), is always Galois, with \(Gal(K/E_k) = H_k.\)
+        \item \(E_k/F\) is Galois if and only if \(H_k \leq G\) is a normal subgroup.
+        \item If \(E_1, E_2\) correspond to \(H_1, H_2\), then \(E_1 \bigcap E_2\) corresponds to \(\rangle H_1, H_2 \langle\) and the composite field 
+        \(E_1E_2\) corresponds to \(H_1 \bigcap H_2.\)\\
+    \end{enumerate}
+    This correspondence between subfields of \(K\) and subgroups of \(Gal(K/F)\) is called the \textit{Galois Correspondence}.
+    \end{theorem}
+    \textit{Note.} The proof of the Fundamental Theorem of Galois Theory is a must-read for everyone; however, due to length concerns of the main section 
+    of the handout, it is in the Proofs section. Please check out some of the other proofs that have faded to obscurity down here.
+\end{section}
+
+\end{document}
