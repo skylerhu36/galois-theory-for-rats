@@ -36,3 +36,15 @@ pythontex-files-*/
 ## Final output
 # Uncomment the line below if you do NOT want to track your PDF
 # *.pdf
+
+# latexmkrc
+*.latexmkrc
+
+# embarrassments
+actual report.*
+construction-1.*
+construction-1_0.*
+proofs.*
+bref.*
+cf.*
+gal.*

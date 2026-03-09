@@ -17,6 +17,8 @@
 
 % Define the theorem, lemma, proposition and corollary environmentsc
 
+\newtheorem{filler}{Filler}
+\theoremstyle{definition}
 \newtheorem{corollary}{Corollary}[section]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -262,6 +264,10 @@
         \end{tikzcd}
         \caption{subfields of \(K \mapsto\) subgroups of \(G\) in reverse-inclusion}
     \end{figure}
+    given by 
+    \[E_k \rightarrow \text{elements of } G \text{ fixing } E_k\]
+    and 
+    \[\text{fixed field of } H_k \leftarrow H_k.\]
     Under this correspondence:
     \begin{enumerate}
         \item This correspondence is inclusion-reversing, i.e if \(E_1 \to H_1, E_2 \to H_2\), then \(E_1\subseteq E_2 \Leftrightarrow H_2 \leq H_1.\)
@@ -277,4 +283,75 @@
     of the handout, it is in the Proofs section. Please check out some of the other proofs that have faded to obscurity down here.
 \end{section}
 
+\begin{section}{Proofs}
+    \begin{subsection}{Theorem 4.1: Fundamental Theorem of Galois Theory}
+        We will prove each of the 5 statements from FTGT. Some of them requires preliminary results, which we will derive along the way:\\
+        \noindent\textbf{(1)} If \(E_1 \mapsto H_1, E_2 \mapsto H_2\), then \(E_1\subseteq E_2\Leftrightarrow H_2 \leq H_1\) (i.e. the correspondence is 
+        inclusion-reversing.)
+        \begin{proof}
+            We've already done this: see \textbf{Proposition 3.1}.
+        \end{proof}
+
+        \noindent\textbf{(2)} \([K:E_k] = \left| H_k \right|\) and \([E_k:F] = \left| G:H_k \right|\):
+        \begin{figure}[H]
+            \centering
+            \begin{tikzcd}[row sep=small, arrows=no head]
+                K \arrow[d, "\left| H_k \right|"]\\
+                E_k\arrow[d, "\left| G:H_k \right|"]\\
+                F
+            \end{tikzcd}
+        \end{figure}
+        \begin{proof}
+            The proof uses the following theorem:
+            \begin{theorem}{(Order of subgroups \& Degree of Extensions)}
+                Let \(G\) be a subgroup of \(Aut(K)\). Let \(F\) be the fixed field of \(G\). Then 
+                \[[K:F] = \left| G \right|.\]
+            \end{theorem}
+            Since \(E_k\) is the fixed field of \(H_k\) by the Galois Correspondence, \([K: E_k] = \left| H_k \right|\) holds by \textbf{Theorem 5.1}.
+            \(F\) is the fixed field of \(G\), so \([K:F] = \left| G \right|\) also by \textbf{Theorem 5.1}. Also 
+            \([K:F] = [K:E_k][E_k:F]\) by the Tower Law, so \([E_k:F] = \frac{\left|G\right|}{\left|H_k\right|} = \left|G:H_k\right|\).
+        \end{proof}
+
+        \noindent\textbf{(3)} \(K/E_k\) is always Galois, with \(Gal(K/E_k) = H_k\).
+        \begin{proof}
+            The proof uses the following corollary:
+            \begin{corollary}{(General form of \textbf{Proposition 3.2}.)}
+                Let \(K/F\) be any finite extension. Then 
+                \[Aut(K/F) \leq [K:F]\]
+                with equality if and only if \(F\) is the fixed field of \(Aut(K/F)\).
+            \end{corollary}
+            By definition of the Galois Correspond,ce \(E_k\) is the fixed field of \(H_k\) and \(H_k = Aut(K/E_k)\). Then 
+            \(K/E_k\) is Galois since \(K/E_k = \left|H_k\right|\) (consider the conditions for Galois group and extensions),
+            and \(H=Aut(K/E_k) = Gal(K/E_k)\).
+        \end{proof}
+
+        \noindent\textbf{(4)} \(E_k/F\) is Galois if and only if \(H_k\leq G\) is a normal subgroup.
+        \begin{proof}
+            Surprisingly (for now), this is by far the most complicated result of the FTGT to prove and this therefore not included here. 
+            I might write a writeup someday for the things that are too hard to be included even in the Proofs sections :(\\
+            \noindent\textit{If this is your second or more read-through:} Unsurprisingly, even though this result seems like a variant of \textbf{(2)} except 
+            in the opposite direction (we descend towards \(F\) instead of ascending towards \(K\)), this is the by far the most complicated result of 
+            the FTGT to prove because it forms the final piece of the `chain of solvable groups' idea in solvability.
+        \end{proof}
+
+        \noindent\textbf{(5)} If \(E_1, E_2\) correspond to \(H_1, H_2\), then \(E_1 \cap E_2\) corresponds to \(\langle H_1,H_2 \rangle\) and 
+        \(E_1 E_2\) corresponds to \(H_1 \cap H_2\).
+        \begin{proof}
+            An explanation of what the notation means:
+            \begin{enumerate}
+                \item \(E_1 \cap E_2\): the intersection of \(E_1\) and \(E_2\), intuitively `\(E_1\) and \(E_2\)'. Note that this is not always the elements that are both in 
+                \(E_1\) and \(E_2\), since the resultant set must satisfy the field axioms.
+                \item \(\langle H_1,H_2 \rangle\): the smallest subgroup of \(G\) containing all elements in \(H_1, H_2\). Similar to the definition of a
+                union of two sets, except in this case extra elements may be added so the resulting set satisfies the group axioms. Intuitively `\(H_1\) or \(H_2\)'.
+                \item \(E_1 E_2\): the composite field of \(E_1\) and \(E_2\), essentially the smallest subfield of \(K\) containing all elements in \(E_1\)
+                and \(E_2\). Intuition same as above: `\(E_1\) or \(E_2\)'.
+                \item: \(H_1 \cap H_2\): the intersection of two groups. You probably already know this as `\(H_1\) or \(H_2\)'.
+            \end{enumerate}
+            Since \(H_1\) fixes \(E_1\) and \(H_2\) fixes \(E_2\), \(E_1 \cap E_2\) is fixed by all the elements of both \(H_1\) and \(H_2\) (`\(H_1\) or \(H_2\)'), so \(E_1 \cap E_2\) 
+            corresponds to \(\langle H_1, H_2 \rangle\). Similarly, \(H_1\cap H_2\) fixes elements in both \(E_1\) and \(E_2\)(`\(E_1\) or \(E_2\)'), so \(E_1 E_2\) corresponds to \(H_1\cap H_2\).\\
+            \noindent\textit{Note.} If you ever learned a programming language (that is not HTML, I hate that thing) you'll probably have a good understanding of the `and-or' inverse correspondence 
+            coming into play here, similar to `not A and B' corresponds to `not A or not B'.
+        \end{proof}
+    \end{subsection}
+\end{section}
 \end{document}
